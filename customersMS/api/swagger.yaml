@@ -1,0 +1,306 @@
+openapi: 3.0.0
+info:
+  title: ACME Reviews - PSIDI
+  description: Swagger proposed server for the Review Product infrastructure at ACME
+    .Inc
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: 1171071@isep.ipp.pt
+  version: "0.1"
+servers:
+- url: https://acme.reviews.com/v1
+  description: Development server
+tags:
+- name: customers
+  description: Handles the Profile service requests
+- name: products
+  description: Handles the Catalog service requests
+- name: reviews
+  description: Handles the Evaluation service requests
+paths:
+  /customers:
+    post:
+      tags:
+      - customers
+      summary: Register a New Customer
+      operationId: registerCustomer
+      requestBody:
+        description: The data used to create a customer (name, username, password,
+          etc)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      responses:
+        "201":
+          description: Customer Registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_1'
+          links:
+            GetCustomerById:
+              operationId: getCustomer
+              parameters:
+                customerId: $response.body#/customerId
+                required: "true"
+                description: ""
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Request
+        "503":
+          description: Service Unavailable
+      deprecated: false
+  /customers/{customerId}:
+    get:
+      tags:
+      - customers
+      summary: Get a Customer By Id
+      operationId: getCustomer
+      parameters:
+      - name: customerId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Customer Obtained
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Request
+        "503":
+          description: Service Unavailable
+      deprecated: false
+      security:
+      - OAuth2:
+        - customer_read
+  /reviews/{reviewId}:
+    put:
+      tags:
+      - reviews
+      summary: Update a Review Status
+      operationId: updateReviewsStatus
+      parameters:
+      - name: reviewId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: The data used to update a review (status)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Review'
+        required: true
+      responses:
+        "200":
+          description: Review Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+          links:
+            GetReviewById:
+              operationId: getReview
+              parameters:
+                customerId: $response.body#/reviewId
+                required: "true"
+                description: ""
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Request
+        "503":
+          description: Service Unavailable
+      security:
+      - OAuth2:
+        - moderator
+  /reviews:
+    get:
+      tags:
+      - reviews
+      summary: Update a Review Status
+      operationId: getPendingReviews
+      parameters:
+      - name: status
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          default: pending
+      responses:
+        "200":
+          description: Reviews Fetched
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: array
+                  description: IDs of the fetched reviews
+                  items:
+                    type: integer
+                    format: int64
+                x-content-type: application/json
+            application/xml:
+              schema:
+                type: array
+                description: IDs of the fetched reviews
+                xml:
+                  name: reviews
+                items:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+          links:
+            GetReviewById:
+              operationId: getReview
+              parameters:
+                reviewId: $response.body#/reviewId
+                required: "true"
+                description: ""
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Request
+        "503":
+          description: Service Unavailable
+      security:
+      - OAuth2:
+        - moderator
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        date:
+          type: string
+          format: date
+        status:
+          type: object
+      xml:
+        name: Customer
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        funnyFact:
+          type: string
+        score:
+          type: number
+        reviewDescription:
+          type: string
+        date:
+          type: string
+        status:
+          type: string
+          enum:
+          - pending
+          - accepted
+          - rejected
+      xml:
+        name: Review
+    inline_response_201:
+      type: object
+      properties:
+        customerId:
+          type: integer
+          description: ID of the created user
+          format: int64
+      example:
+        customerId: 0
+    inline_response_201_1:
+      type: object
+      properties:
+        customerId:
+          type: integer
+          description: ID of the created user
+          format: int64
+      xml:
+        name: customer
+    inline_response_200:
+      type: object
+      properties:
+        reviewId:
+          type: integer
+          description: ID of the updated review
+          format: int64
+      example:
+        reviewId: 0
+    inline_response_200_1:
+      type: object
+      properties:
+        reviewId:
+          type: integer
+          description: ID of the updated review
+          format: int64
+      xml:
+        name: review
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          tokenUrl: https://example.com/oauth/token
+          scopes:
+            customer_read: Grants customers read access
+            customer_write: Grants customers write access
+            moderator: Grants access to moderator operations
