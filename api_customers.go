@@ -70,7 +70,7 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
-	uriOfResource := "http://psidi-acme-reviews.herokuapp.com/" + r.URL.String() + "/" + strconv.FormatInt(id, 10)
+	uriOfResource := "http://psidi-acme-reviews.herokuapp.com" + r.URL.String() + "/" + strconv.FormatInt(id, 10)
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(uriOfResource))

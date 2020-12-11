@@ -27,6 +27,5 @@ func main() {
 	router := NewRouter()
 	port := os.Getenv("PORT")
 
-	log.Println("TESTE")
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
