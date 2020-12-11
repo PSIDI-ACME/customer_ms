@@ -24,6 +24,7 @@ import (
 func GetCustomer(w http.ResponseWriter, r *http.Request) {
 
 	id := mux.Vars(r)["customerId"]
+
 	n, err := strconv.Atoi(id)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
