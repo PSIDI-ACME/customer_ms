@@ -24,7 +24,6 @@ import (
 
 func main() {
 	log.Printf("Server started")
-
 	router := NewRouter()
 	port := os.Getenv("PORT")
 
