@@ -106,3 +106,4 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(uriOfResource))
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 }
+
