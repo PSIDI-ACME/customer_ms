@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"strings"
+	
 )
 
 func PostCustomer(customer *Customer) (id int64, code int, err error) {
@@ -27,6 +28,20 @@ func PostCustomer(customer *Customer) (id int64, code int, err error) {
 
 	id = PostCustomerDB(customer)
 	fmt.Println("New record ID is:", id)
+	return
+}
+
+func PutCustomer(customerId int, review string) (code int, err error) {
+	customer := GetCustomerDB(customerId)
+	reviews := customer.Reviews
+	reviews = reviews[:len(reviews)-1]
+	if reviews == "[" {
+		reviews = reviews +review+"]"	
+	}else{
+	reviews = reviews + ","+review+"]"
+	}
+	fmt.Println("reviews", reviews)
+	UpdateCustomerReviews(customerId, reviews)
 	return
 }
 

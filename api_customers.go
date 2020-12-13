@@ -24,6 +24,7 @@ import (
 func GetCustomer(w http.ResponseWriter, r *http.Request) {
 
 	id := mux.Vars(r)["customerId"]
+
 	n, err := strconv.Atoi(id)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -40,6 +41,36 @@ func GetCustomer(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(respBodyBytes.Bytes())
 }
+
+func UpdateCustomer(w http.ResponseWriter, r *http.Request) {
+
+	review, ok := r.URL.Query()["review"]
+	id := mux.Vars(r)["customerId"]
+    
+    if !ok || len(review[0]) < 1 {
+        log.Println("Url Param 'key' is missing")
+        return
+    }
+	n, err := strconv.Atoi(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Id is not an integer."))
+		return
+	}
+
+ 	code, err := PutCustomer(n, review[0])
+	if err != nil {
+		w.WriteHeader(code)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	uriOfResource := "http://psidi-customers.herokuapp.com" + r.URL.Path
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(uriOfResource))
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+}
+
 
 func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 
@@ -69,9 +100,10 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
-	uriOfResource := "http://psidi-acme-reviews.herokuapp.com/" + r.URL.String() + "/" + strconv.FormatInt(id, 10)
+	uriOfResource := "http://psidi-customers.herokuapp.com" + r.URL.String() + "/" + strconv.FormatInt(id, 10)
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(uriOfResource))
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 }
+
