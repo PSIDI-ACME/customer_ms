@@ -13,6 +13,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+//	"github.com/joho/godotenv"
 	// WARNING!
 	// Change this to a fully-qualified import path
 	// once you place this file into your project.
@@ -25,7 +26,9 @@ import (
 func main() {
 	log.Printf("Server started")
 	router := NewRouter()
+//	godotenv.Load(".env")
 	port := os.Getenv("PORT")
-
+	log.Println(port)
 	log.Fatal(http.ListenAndServe(":"+port, router))
+	//log.Fatal(http.ListenAndServe(":8080", router))
 }

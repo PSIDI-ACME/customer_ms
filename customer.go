@@ -12,4 +12,6 @@ type Customer struct {
 	LastName string `json:"lastName"`
 
 	Email string `json:"email"`
+
+	Reviews string`json:"reviews,omitempty"`
 }
