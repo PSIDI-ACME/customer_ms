@@ -6,23 +6,22 @@ import (
 	"log"
 	"os"
 	"strconv"
-//	"github.com/joho/godotenv"
+	//	"github.com/joho/godotenv"
 )
 
-
-const insertIntoCustomers = `INSERT INTO "Customers"."Customers"("firstName","lastName","userName","email","password", "reviews") VALUES ($1,$2,$3,$4,$5, $6) RETURNING id;`
+const insertIntoCustomers = `INSERT INTO "Customers"."Customers"("firstName","lastName","userName","email","password") VALUES ($1,$2,$3,$4,$5) RETURNING id;`
 const selectCustomer = `SELECT * FROM "Customers"."Customers" WHERE id=$1;`
 const updateCustomerReviews = `UPDATE "Customers"."Customers" SET reviews=$1 WHERE id=$2;`
 
 var db *sql.DB
 
 func connectToDatabase() {
-//	godotenv.Load(".env")
-	 host := os.Getenv("DBHOST")
- port := os.Getenv("DBPORT")
- user := os.Getenv("DBUSER")
- password := os.Getenv("DBPASS")
- dbname := os.Getenv("DBNAME")
+	//	godotenv.Load(".env")
+	host := os.Getenv("DBHOST")
+	port := os.Getenv("DBPORT")
+	user := os.Getenv("DBUSER")
+	password := os.Getenv("DBPASS")
+	dbname := os.Getenv("DBNAME")
 
 	i_port, _ := strconv.Atoi(port)
 	psqlInfo := fmt.Sprintf("postgres://%s:%s@%s:%d/%s",
@@ -58,12 +57,12 @@ func GetCustomerDB(customerId int) (requestedCustomer *Customer) {
 	var username string
 	var email string
 	var password string
-	var reviews string
+	//	var reviews string
 
 	defer db.Close()
 
 	row := db.QueryRow(selectCustomer, customerId)
-	switch err := row.Scan(&id, &firstName, &lastName, &username, &email, &password, &reviews); err {
+	switch err := row.Scan(&id, &firstName, &lastName, &username, &email, &password); err {
 	case sql.ErrNoRows:
 		fmt.Println("No rows were returned!")
 	case nil:
@@ -77,19 +76,18 @@ func GetCustomerDB(customerId int) (requestedCustomer *Customer) {
 		LastName:  lastName,
 		Username:  username,
 		Email:     email,
-		Reviews:   reviews,
+		//	Reviews:   reviews,
 	}
 
 	return
 }
 
-
+/*
 func UpdateCustomerReviews(customerId int, reviews string) (newCustomerId int64) {
 
 	connectToDatabase()
 
-
-	err := db.QueryRow(updateCustomerReviews,reviews, customerId).Scan(newCustomerId)
+	err := db.QueryRow(updateCustomerReviews, reviews, customerId).Scan(newCustomerId)
 	log.Println(customerId, reviews)
 	if err != nil {
 		log.Println("Failed to execute query: ", err)
@@ -97,6 +95,6 @@ func UpdateCustomerReviews(customerId int, reviews string) (newCustomerId int64)
 
 	defer db.Close()
 
-
 	return
 }
+*/

@@ -68,11 +68,12 @@ var routes = Routes{
 		"/v1/customers",
 		RegisterCustomer,
 	},
-
-	Route{
-		"UpdateCustomer",
-		strings.ToUpper("Put"),
-		"/v1/customers/{customerId}",
-		UpdateCustomer,
-	},
+	/*
+		Route{
+			"UpdateCustomer",
+			strings.ToUpper("Patch"),
+			"/v1/customers/{customerId}",
+			UpdateCustomer,
+		},
+	*/
 }

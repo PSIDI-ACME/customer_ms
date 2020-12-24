@@ -42,11 +42,12 @@ func GetCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Write(respBodyBytes.Bytes())
 }
 
+/*
 func UpdateCustomer(w http.ResponseWriter, r *http.Request) {
 
 	review, ok := r.URL.Query()["review"]
 	id := mux.Vars(r)["customerId"]
-    
+
     if !ok || len(review[0]) < 1 {
         log.Println("Url Param 'key' is missing")
         return
@@ -70,7 +71,7 @@ func UpdateCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(uriOfResource))
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 }
-
+*/
 
 func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 
@@ -106,4 +107,3 @@ func RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(uriOfResource))
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 }
-

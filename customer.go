@@ -13,5 +13,5 @@ type Customer struct {
 
 	Email string `json:"email"`
 
-	Reviews string`json:"reviews,omitempty"`
+	//	Reviews string`json:"reviews,omitempty"`
 }

@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"strings"
-	
 )
 
 func PostCustomer(customer *Customer) (id int64, code int, err error) {
@@ -31,12 +30,13 @@ func PostCustomer(customer *Customer) (id int64, code int, err error) {
 	return
 }
 
+/*
 func PutCustomer(customerId int, review string) (code int, err error) {
 	customer := GetCustomerDB(customerId)
 	reviews := customer.Reviews
 	reviews = reviews[:len(reviews)-1]
 	if reviews == "[" {
-		reviews = reviews +review+"]"	
+		reviews = reviews +review+"]"
 	}else{
 	reviews = reviews + ","+review+"]"
 	}
@@ -44,7 +44,7 @@ func PutCustomer(customerId int, review string) (code int, err error) {
 	UpdateCustomerReviews(customerId, reviews)
 	return
 }
-
+*/
 func GetCustomerService(id int) (customer *Customer) {
 	customer = GetCustomerDB(id)
 	fmt.Println("Fetched Customer is:", customer)
