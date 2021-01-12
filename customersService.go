@@ -72,7 +72,7 @@ func GetCustomerService(id int, req *http.Request) (hypermedia []byte) {
 
 	r := hal.NewResource(customer, "https://"+req.Host+req.URL.Path+"/customers/"+strconv.Itoa(id))
 
-	review := hal.NewResource(Review{}, "http://reviews-psidi.herokuapp.com/v1/reviews?customerId="+strconv.Itoa(id))
+	review := hal.NewResource(Review{}, "http://reviews-psidi.herokuapp.com/reviews?customerId="+strconv.Itoa(id))
 
 	r.Embed("review", review)
 	var err error
