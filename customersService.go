@@ -2,10 +2,15 @@ package main
 
 import (
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
+	"net/http"
+	"strconv"
 	"strings"
+
+	"github.com/nvellon/hal"
 )
 
 func PostCustomer(customer *Customer) (id int64, code int, err error) {
@@ -45,8 +50,39 @@ func PutCustomer(customerId int, review string) (code int, err error) {
 	return
 }
 */
-func GetCustomerService(id int) (customer *Customer) {
-	customer = GetCustomerDB(id)
+
+type Review struct {
+}
+
+func (c Customer) GetMap() hal.Entry {
+	return hal.Entry{
+		"firstName": c.FirstName,
+		"lastName":  c.LastName,
+		"email":     c.Email,
+		"username":  c.Username,
+	}
+}
+
+func (r Review) GetMap() hal.Entry {
+	return hal.Entry{}
+}
+
+func GetCustomerService(id int, req *http.Request) (hypermedia []byte) {
+	customer := GetCustomerDB(id)
+
+	r := hal.NewResource(customer, "https://"+req.Host+req.URL.Path+"/customers/"+strconv.Itoa(id))
+
+	review := hal.NewResource(Review{}, "http://reviews-psidi.herokuapp.com/v1/reviews?customerId="+strconv.Itoa(id))
+
+	r.Embed("review", review)
+	var err error
+	hypermedia, err = json.MarshalIndent(r, "", "  ")
+	if err != nil {
+		fmt.Printf("%s", err)
+	}
+
+	fmt.Printf("%s", hypermedia)
+
 	fmt.Println("Fetched Customer is:", customer)
-	return customer
+	return hypermedia
 }

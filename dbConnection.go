@@ -6,7 +6,8 @@ import (
 	"log"
 	"os"
 	"strconv"
-	//	"github.com/joho/godotenv"
+
+	"github.com/joho/godotenv"
 )
 
 const insertIntoCustomers = `INSERT INTO "Customers"."Customers"("firstName","lastName","userName","email","password") VALUES ($1,$2,$3,$4,$5) RETURNING id;`
@@ -16,7 +17,7 @@ const updateCustomerReviews = `UPDATE "Customers"."Customers" SET reviews=$1 WHE
 var db *sql.DB
 
 func connectToDatabase() {
-	//	godotenv.Load(".env")
+	godotenv.Load(".env")
 	host := os.Getenv("DBHOST")
 	port := os.Getenv("DBPORT")
 	user := os.Getenv("DBUSER")

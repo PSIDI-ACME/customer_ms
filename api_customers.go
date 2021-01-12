@@ -10,7 +10,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -32,14 +31,11 @@ func GetCustomer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	requestedCustomer := GetCustomerService(n)
-
-	respBodyBytes := new(bytes.Buffer)
-	json.NewEncoder(respBodyBytes).Encode(requestedCustomer)
+	requestedCustomer := GetCustomerService(n, r)
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write(respBodyBytes.Bytes())
+	w.Write(requestedCustomer)
 }
 
 /*
