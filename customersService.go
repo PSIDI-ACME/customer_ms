@@ -70,7 +70,7 @@ func (r Review) GetMap() hal.Entry {
 func GetCustomerService(id int, req *http.Request) (hypermedia []byte) {
 	customer := GetCustomerDB(id)
 
-	r := hal.NewResource(customer, "https://"+req.Host+req.URL.Path+"/customers/"+strconv.Itoa(id))
+	r := hal.NewResource(customer, "https://"+req.Host+req.URL.Path)
 
 	review := hal.NewResource(Review{}, "http://reviews-psidi.herokuapp.com/reviews?customerId="+strconv.Itoa(id))
 
