@@ -36,7 +36,7 @@ func connectToDatabase() {
 func PostCustomerDB(requestedCustomer *Customer) (customerId int64) {
 
 	connectToDatabase()
-	err := db.QueryRow(insertIntoCustomers, &requestedCustomer.FirstName, &requestedCustomer.LastName, &requestedCustomer.Username, &requestedCustomer.Email, &requestedCustomer.Password, "[]").Scan(&customerId)
+	err := db.QueryRow(insertIntoCustomers, &requestedCustomer.FirstName, &requestedCustomer.LastName, &requestedCustomer.Username, &requestedCustomer.Email, &requestedCustomer.Password).Scan(&customerId)
 	if err != nil {
 		log.Fatal("Failed to execute query: ", err)
 	}
