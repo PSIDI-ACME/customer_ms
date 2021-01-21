@@ -10,11 +10,13 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"log"
 	"net/http"
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/nvellon/hal"
 )
 
 type Route struct {
@@ -23,6 +25,9 @@ type Route struct {
 	Pattern     string
 	HandlerFunc http.HandlerFunc
 }
+
+var tpl []string
+var met []string
 
 type Routes []Route
 
@@ -39,19 +44,44 @@ func NewRouter() *mux.Router {
 			Name(route.Name).
 			Handler(handler)
 	}
+	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+		path, _ := route.GetPathTemplate()
+		tpl = append(tpl, path)
+		mets, _ := route.GetMethods()
+		met = append(met, mets[0])
+		return nil
+	})
 
 	return router
 }
 
+type Root struct {
+}
+
+func (r Root) GetMap() hal.Entry {
+	return hal.Entry{}
+}
+
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
+
+	for i := 1; i < len(tpl); i++ {
+		log.Println(tpl[i])
+	}
+
+	root := hal.NewResource(Root{}, r.Host)
+	root.AddNewLink("search", tpl[1])
+	root.AddNewLink("list", tpl[2])
+
+	links, _ := json.MarshalIndent(root, "", "  ")
+
+	w.Write(links)
 }
 
 var routes = Routes{
 	Route{
 		"Index",
 		"GET",
-		"/v1/",
+		"/v1/routes",
 		Index,
 	},
 
