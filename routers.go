@@ -70,7 +70,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 	root := hal.NewResource(Root{}, r.Host)
 	root.AddNewLink("search", tpl[1])
-	root.AddNewLink("list", tpl[2])
+	root.AddNewLink("create", tpl[2])
 
 	links, _ := json.MarshalIndent(root, "", "  ")
 
